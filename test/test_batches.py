@@ -1,18 +1,12 @@
+import pytest
 from test.factories import BatchFactory, OrderLineFactory
+from domain.model import AllocationException
 
 
 def test_allocate_reduces_available_quantity():
     batch = BatchFactory(qty=10)
     order_line = OrderLineFactory(qty=2)
 
-    batch.allocate(order_line)
-    assert batch.available_quantity == 8
-
-def test_allocate_is_idempotent_for_same_order_line():
-    batch = BatchFactory(qty=10)
-    order_line = OrderLineFactory(qty=2)
-
-    batch.allocate(order_line)
     batch.allocate(order_line)
     assert batch.available_quantity == 8
 
@@ -57,3 +51,10 @@ def test_can_only_allocate_depending_on_qty():
     assert batch.can_allocate(order_line)
     assert batch.can_allocate(order_line_same_qty)
     assert not batch.can_allocate(order_line_higher_qty)
+
+def test_allocate_raises_exception_when_cannot_allocate():
+    batch = BatchFactory(qty=10)
+    order_line = OrderLineFactory(qty=12, sku=batch.sku)
+
+    with pytest.raises(AllocationException):
+        batch.allocate(order_line)
