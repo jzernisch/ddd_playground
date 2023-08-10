@@ -1,16 +1,20 @@
 from dataclasses import dataclass, field
+from typing import NewType
 
+
+Quantity = NewType("Quantity", str)
+SKU = NewType("SKU", str)
 @dataclass
 class OrderLine:
     ref: str
-    sku: str
-    qty: int
+    sku: SKU
+    qty: Quantity
 
 @dataclass
 class Batch:
     ref: str
-    sku: str
-    qty: int
+    sku: SKU
+    qty: Quantity
     allocations: list[OrderLine] = field(default_factory=list)
 
     @property
