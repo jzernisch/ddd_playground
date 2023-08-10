@@ -16,6 +16,30 @@ def test_allocate_is_idempotent_for_same_order_line():
     batch.allocate(order_line)
     assert batch.available_quantity == 8
 
+def test_deallocate_increases_available_quantity():
+    batch = BatchFactory(qty=10)
+    order_line = OrderLineFactory(qty=2)
+
+    batch.allocate(order_line)
+    batch.deallocate(order_line)
+    assert batch.available_quantity == 10
+
+def test_deallocate_is_idempotent_for_same_order_line():
+    batch = BatchFactory(qty=10)
+    order_line = OrderLineFactory(qty=2)
+
+    batch.allocate(order_line)
+    batch.deallocate(order_line)
+    batch.deallocate(order_line)
+    assert batch.available_quantity == 10
+
+def test_deallocate_has_no_effect_if_not_allocated():
+    batch = BatchFactory(qty=10)
+    order_line = OrderLineFactory(qty=2)
+
+    batch.deallocate(order_line)
+    assert batch.available_quantity == 10
+
 def test_can_allocate_depending_on_sku():
     batch = BatchFactory(qty=10)
     order_line = OrderLineFactory(qty=2, sku=batch.sku)

@@ -22,5 +22,10 @@ class Batch:
             return
         self.allocations.append(order_line)
 
+    def deallocate(self, order_line: OrderLine) -> None:
+        if order_line not in self.allocations:
+            return
+        self.allocations.remove(order_line)
+
     def can_allocate(self, order_line: OrderLine) -> bool:
         return self.sku == order_line.sku and self.qty >= order_line.qty
