@@ -1,10 +1,18 @@
 from test.factories import BatchFactory, OrderLineFactory
 
 
-def test_allocate():
+def test_allocate_reduces_available_quantity():
     batch = BatchFactory(qty=10)
     order_line = OrderLineFactory(qty=2)
 
+    batch.allocate(order_line)
+    assert batch.available_quantity == 8
+
+def test_allocate_is_idempotent_for_same_order_line():
+    batch = BatchFactory(qty=10)
+    order_line = OrderLineFactory(qty=2)
+
+    batch.allocate(order_line)
     batch.allocate(order_line)
     assert batch.available_quantity == 8
 
