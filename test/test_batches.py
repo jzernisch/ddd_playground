@@ -58,3 +58,8 @@ def test_allocate_raises_exception_when_cannot_allocate():
 
     with pytest.raises(AllocationException):
         batch.allocate(order_line)
+
+def test_orderline_is_compares_by_value():
+    order_line_1 = OrderLineFactory()
+    order_line_2 = OrderLineFactory(qty=order_line_1.qty, sku=order_line_1.sku)
+    assert order_line_1 == order_line_2
