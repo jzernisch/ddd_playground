@@ -4,7 +4,7 @@ from typing import NewType
 
 Quantity = NewType("Quantity", str)
 SKU = NewType("SKU", str)
-@dataclass
+@dataclass(frozen=True)
 class OrderLine:
     sku: SKU
     qty: Quantity
