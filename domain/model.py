@@ -6,7 +6,6 @@ Quantity = NewType("Quantity", str)
 SKU = NewType("SKU", str)
 @dataclass
 class OrderLine:
-    ref: str
     sku: SKU
     qty: Quantity
 
